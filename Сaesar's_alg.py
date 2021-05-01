@@ -57,7 +57,7 @@ def Decoding(e_m,key,alphabet):
             decrypted_message += step
 
     # Запись расшифровки в файл:    
-    with open(r"c:\Users\матвей\OneDrive\рабочий стол\Python_files\Encrypted_file.txt","a",encoding = "utf-8" ) as f:
+    with open("Encrypted_file.txt","a",encoding = "utf-8" ) as f:
         f.write("\nYou decrypted message:\n{}".format(decrypted_message.capitalize()))
     # Вывод расшифрованного сообщения:
     print("Decrypted message: {}".format(decrypted_message.capitalize()))
@@ -78,7 +78,7 @@ def Encrypt(message):
         else:
             encrypt_message += step
     # Запись в файл:        
-    with open("c:\\Users\\Матвей\\OneDrive\\Рабочий стол\\Python_files\\Encrypted_file.txt","w",encoding = 'utf-8') as f:
+    with open("Encrypted_file.txt","w",encoding = 'utf-8') as f:
         f.write("You encrypted message:\nCipher: {}".format(encrypt_message.capitalize()))
     # Вывод:
     print("Encrypt message: {}".format(encrypt_message.capitalize()))
