@@ -4,8 +4,8 @@
 from random import choice, randint
 # Создание списка простых чисел до задданного числа:
 def create_num(n):
-    '''if n < 2:
-        return '''
+    ''' Функция получения списка простых чисел очень быстро,
+    основано на решето Эрастафена.'''
     max_ndx = (n - 1) // 2
     lst = [True] * (max_ndx + 1) # создание списка чисел до n,(все числа это True)
     for ndx in range(int(n ** 0.5) // 2):
@@ -37,14 +37,21 @@ def cheak_num(num1,num2):
 
 ''' Основная функция шифровки сообщения.
     Генерация ключа и шифрование передаваемого сообщения.'''
-def Encrypt(message, n = 40000000):
+def Encrypt(message, n = 55000000,des = None):
     # список чисел от 1 до n:
     lst_num = list(range(1,30000))
-    # кладём наш список простых чисел в переменную:
-    lst_whole = create_num(n)
+    # конструкция для ускорения производительности при шифровании текста(p.s: des - обозначение чем является сообщение if des =  None then: int; else: string.):
+    if des == None:
+        # кладём наш список простых чисел в переменную:
+        lst_whole = create_num(n)
+    else:
+        #  des - это список простых чисел вызванный 1 раз вне функции Encrypt:
+        lst_whole = des
+    # получение процентной соостовляющей:
+    # например: if длинна списка = 100 then num = 100 - 17%; num = 83.
     l = len(lst_whole)   
-    num = int(l-(l/100*17))   
-    # случайный выбор простых чисел
+    num = int(l-(l/100*14))   
+    # случайный выбор простых чисел(начиная от num)
     a = choice(lst_whole[num:])
     b = choice(lst_whole[num:])
     # проверка a and b на уникальность:
@@ -53,7 +60,7 @@ def Encrypt(message, n = 40000000):
     public_key = a * b
     # Проверка:
     cheak(message,public_key)
-    # число фи:
+    # число фи(функция Эйлера):
     f = ((a-1)*(b-1))
     # генерация открытой экспоненты;
     i = 0
@@ -106,12 +113,17 @@ def main(message):
         message = int(message)
         keys = {}
         encrypted_message,e,k = Encrypt(message)
-        keys.update({e: k})
+        keys.update({e: k})# e - это секретная экспонента, k - открытый ключ.(пара ключ-значение(e,k) )
+        # запись данных в файл:
+        with open("Encrypted_file.txt","w") as f:
+            f.write("You Cipher: {}\n".format(encrypted_message))
+            f.write("You public key: {}".format(", ".join(str(e) for e in list(keys.values() ) ) ) ) # ps: секретная экспонента не записывается так как она секретная.
+
         # вывод:
         print("Your encrypted message:", encrypted_message)
         print("Public key:", list(keys.values())[0])
         # запрос на то что сделать?
-        choice = input("\nDecrypt the message: ").lower()
+        choice = input("\nDecrypt the message(yes or no): ").lower()
         if choice ==  "yes":
             Decrypt(encrypted_message,keys,designation = "int" )
         else:
@@ -129,15 +141,20 @@ def main(message):
                 print("ERROR: Неверный символ!")
                 print(element,"- нельзя шифровать.")
                 exit(0)
+        lst_whole = create_num(15000000)
         # передача в функцию шифровки по 1 символу:
         for i in message:
-            m,e,k = Encrypt(i,7000000)
+            m,e,k = Encrypt(i,0,lst_whole)
             encrypted_message.append(m)
             keys.update({e: k})
 
+        # запись данных в файл:
+        with open("Encrypted_file.txt","w") as f:
+            f.write("You Cipher: {}\n".format(", ".join(str(e) for e in encrypted_message) ) )
+            f.write("You public keys: {}".format(", ".join(str(e) for e in list(keys.values()) ) ) )# ps: секретная экспонента не записывается так как она секретная.
+
         #вывод:
         print("\nYour encrypted message:", ", ".join(str(e) for e in encrypted_message))
-        print("\nPublic keys: {}".format(", ".join(str(e) for e in list(keys.values()))))
 
         # запрос на то что сделать?
         choice = input("\nDecrypt the message(yes or no): ").lower()
